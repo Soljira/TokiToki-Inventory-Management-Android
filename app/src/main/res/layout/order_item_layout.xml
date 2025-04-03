@@ -1,0 +1,38 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Order ID TextView -->
+    <TextView
+        android:id="@+id/orderIdTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order ID"
+        android:textSize="16sp" />
+
+    <!-- Supplier TextView -->
+    <TextView
+        android:id="@+id/supplierTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Supplier"
+        android:textSize="14sp" />
+
+    <!-- Product TextView -->
+    <TextView
+        android:id="@+id/productTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Products"
+        android:textSize="14sp" />
+
+    <!-- Total Price TextView -->
+    <TextView
+        android:id="@+id/totalTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total"
+        android:textSize="16sp" />
+</LinearLayout>

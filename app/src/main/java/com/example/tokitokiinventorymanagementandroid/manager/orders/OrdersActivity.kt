@@ -1,46 +1,73 @@
 package com.example.tokitokiinventorymanagementandroid.manager.orders
+import com.example.tokitokiinventorymanagementandroid.manager.orders.Order
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.LinearLayout
+import android.util.Log
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.tokitokiinventorymanagementandroid.R
 import com.example.tokitokiinventorymanagementandroid.helpers.BottomNavigationInitialization
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.firestore.FirebaseFirestore
 
 class OrdersActivity : AppCompatActivity() {
 
-    lateinit var bottomNavigationView: BottomNavigationView
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: OrdersAdapter
+    private lateinit var emptyView: TextView
+    private val ordersList = mutableListOf<Order>()
+    private val db = FirebaseFirestore.getInstance()
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.manager_orders_customer_orders)
 
-        // Bottom Navigation Bar DO NOT TOUCH
-        bottomNavigationView = findViewById(R.id.bottomNavigationView)
-        BottomNavigationInitialization.setupBottomNavigation(this, bottomNavigationView)
-        bottomNavigationView.selectedItemId = R.id.navbar_manager_orders
+        recyclerView = findViewById(R.id.ordersRecyclerView)
+        emptyView = findViewById(R.id.emptyOrdersTextView)
 
-
-        // NOTE: This is just an example. As more order items are added, definitely do not
-        // hardcode each order item card here. Get data from Firestore and use loops to populate
-        // the list - Breiah
-        val orderItem0 = findViewById<LinearLayout>(R.id.orderItem0)
-        val orderItem1 = findViewById<LinearLayout>(R.id.orderItem1)
-
-        orderItem0.setOnClickListener {
-            startActivity(Intent(this, OrdersCustomerOrderDetails::class.java))
+        adapter = OrdersAdapter(ordersList) { order ->
+            val intent = Intent(this, OrderDetailActivity::class.java)
+            intent.putExtra("orderId", order.id)
+            startActivity(intent)
         }
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = adapter
 
-        orderItem1.setOnClickListener {
-            startActivity(Intent(this, OrdersCustomerOrderDetails::class.java))
-        }
+        loadOrders()
     }
 
-    override fun onResume() {
-        super.onResume()
-        bottomNavigationView.selectedItemId = R.id.navbar_manager_orders
+    private fun loadOrders() {
+        val ordersCollection = db.collection("orders")
+
+        ordersCollection.get()
+            .addOnSuccessListener { documents ->
+                ordersList.clear()
+                for (document in documents) {
+                    val order = document.toObject(Order::class.java)
+                    ordersList.add(order)
+                }
+                if (ordersList.isEmpty()) {
+                    emptyView.visibility = View.VISIBLE
+                } else {
+                    emptyView.visibility = View.GONE
+                }
+                adapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Firestore", "Error getting documents", exception)
+            }
     }
 }
+
+
+
+
+
+

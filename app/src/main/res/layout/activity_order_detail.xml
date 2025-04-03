@@ -1,0 +1,15 @@
+<!-- res/layout/activity_order_detail.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Add UI elements for order details -->
+    <TextView
+        android:id="@+id/orderDetailsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order Details" />
+
+    <!-- Add more elements as needed -->
+</LinearLayout>
